@@ -1,0 +1,76 @@
+﻿@model List<RaceDay.Web.ViewModels.MyEnrolmentViewModel>
+
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">My Events</h1>
+        <p class="lead">View the events you have enrolled in.</p>
+    </div>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            You have not enrolled in any events yet.
+            <br />
+            <a asp-controller="Events"
+               asp-action="Index"
+               class="btn btn-primary mt-3">
+                Browse Events
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var enrolment in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @enrolment.EventName
+                            </h5>
+
+                            <p>
+                                <strong>Category:</strong>
+                                @enrolment.CategoryName
+                            </p>
+
+                            <p>
+                                <strong>Enrolment Date:</strong>
+                                @enrolment.EnrolmentDate.ToString("dd MMM yyyy")
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+                                <span class="badge bg-success">
+                                    @enrolment.Status
+                                </span>
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <a asp-controller="Home"
+       asp-action="Index"
+       class="btn btn-secondary mt-3">
+        Back to Dashboard
+    </a>
+
+</div>

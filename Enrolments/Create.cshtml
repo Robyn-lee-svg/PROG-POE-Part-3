@@ -1,0 +1,91 @@
+﻿@model RaceDay.Web.ViewModels.CreateEnrolmentViewModel
+@using RaceDay.Web.ViewModels
+
+@{
+    ViewData["Title"] = "Enrol in Event";
+    var eventItem = ViewBag.Event as EventViewModel;
+    var categories = ViewBag.Categories as List<CategoryViewModel>;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+
+                    <h1 class="h3 mb-3">Enrol in Event</h1>
+
+                    @if (eventItem != null)
+                    {
+                        <h2 class="h5">@eventItem.Name</h2>
+                        <p class="text-muted">@eventItem.Location</p>
+                    }
+
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    @if (categories == null || !categories.Any())
+                    {
+                        <div class="alert alert-warning">
+                            No categories are currently available for this event.
+                        </div>
+                    }
+                    else
+                    {
+                        <form asp-action="Create" method="post">
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" asp-for="EventID" />
+
+                            <div asp-validation-summary="ModelOnly"
+                                 class="text-danger mb-3"></div>
+
+                            <div class="mb-3">
+                                <label asp-for="CategoryID"
+                                       class="form-label">
+                                    Select Category
+                                </label>
+
+                                <select asp-for="CategoryID"
+                                        class="form-select">
+                                    <option value="">-- Select a Category --</option>
+
+                                    @foreach (var category in categories)
+                                    {
+                                        <option value="@category.CategoryID">
+                                            @category.CategoryName
+                                        </option>
+                                    }
+                                </select>
+
+                                <span asp-validation-for="CategoryID"
+                                      class="text-danger"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                Enrol Now
+                            </button>
+
+                            <a asp-controller="Events"
+                               asp-action="Index"
+                               class="btn btn-secondary">
+                                Cancel
+                            </a>
+                        </form>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
