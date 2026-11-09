@@ -1,0 +1,108 @@
+﻿@model RaceDay.Web.ViewModels.CreateCategoryViewModel
+@using RaceDay.Web.ViewModels
+
+@{
+    ViewData["Title"] = "Create Category";
+    var events = ViewBag.Events as List<EventViewModel>;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+
+                    <h1 class="h3 mb-4">Create Event Category</h1>
+
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EventID" class="form-label">
+                                Select Event
+                            </label>
+
+                            <select asp-for="EventID" class="form-select">
+                                <option value="">-- Select an Event --</option>
+
+                                @if (events != null)
+                                {
+                                    foreach (var eventItem in events)
+                                    {
+                                        <option value="@eventItem.EventID">
+                                            @eventItem.Name
+                                        </option>
+                                    }
+                                }
+                            </select>
+
+                            <span asp-validation-for="EventID"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="CategoryName"
+                                   class="form-label">
+                                Category Name
+                            </label>
+
+                            <input asp-for="CategoryName"
+                                   class="form-control"
+                                   placeholder="e.g. Junior, Senior, Open" />
+
+                            <span asp-validation-for="CategoryName"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description"
+                                   class="form-label">
+                                Description
+                            </label>
+
+                            <textarea asp-for="Description"
+                                      class="form-control"
+                                      rows="3"
+                                      placeholder="Enter a category description">
+                            </textarea>
+
+                            <span asp-validation-for="Description"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Create Category
+                        </button>
+
+                        <a asp-action="Index"
+                           class="btn btn-secondary">
+                            Cancel
+                        </a>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
